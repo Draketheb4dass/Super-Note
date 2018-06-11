@@ -20,6 +20,8 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
 
     //TODO fix focus
+    //TODO apply new theme
+    //TODO make gif walkthrough
 
     ArrayList<String> todoItems;
     ArrayAdapter<String> aTodoAdapter;
