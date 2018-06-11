@@ -19,6 +19,8 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
+    //TODO fix focus
+
     ArrayList<String> todoItems;
     ArrayAdapter<String> aTodoAdapter;
     ListView lvItems;
@@ -73,8 +75,6 @@ public class MainActivity extends AppCompatActivity {
             todoItems.set(position, textBody);
             aTodoAdapter.notifyDataSetChanged();
             writeItems();
-            // Toast the name to display temporarily on screen
-            Toast.makeText(this, textBody, Toast.LENGTH_SHORT).show();
         }
     }
 
