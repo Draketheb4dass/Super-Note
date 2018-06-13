@@ -25,6 +25,7 @@ android:
     - android-25
     - extra-google-m2repository
     - extra-android-m2repository
+    - android-21
     # Support library
     - extra-android-support
 
