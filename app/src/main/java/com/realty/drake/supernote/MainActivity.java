@@ -1,70 +1,83 @@
 package com.realty.drake.supernote;
 
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.SimpleCursorAdapter;
 import android.widget.Toast;
 
-import org.apache.commons.io.FileUtils;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
+import com.realty.drake.supernote.TodoContract.TodoEntry;
 
 public class MainActivity extends AppCompatActivity {
 
-    //TODO fix focus
-    //TODO apply new theme
-    //TODO make gif walkthrough
+    //TODO (Suggested) Improve style of the todo items in the list using a custom adapter
+    //TODO (Suggested) Add support for completion due dates for todo items (and display within listview item)
+    //TODO (Suggested) Use a DialogFragment instead of new Activity for editing items
+    //TODO (Suggested) Improve the UI / UX of your app including icons, styling, color, spacing of your app.
+    //TODO Add support for selecting the priority of each todo item (and display in listview item)
+    //TODO Anything else that you can get done to improve the app functionality or user experience!
 
-    ArrayList<String> todoItems;
-    ArrayAdapter<String> aTodoAdapter;
+
     ListView lvItems;
     EditText etEditText;
     private final int REQUEST_CODE =123;
 
+    private TodoDbHelper mDbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        populateArrayItems();
+        mDbHelper = new TodoDbHelper(this);
         lvItems = findViewById(R.id.lvItems);
-        lvItems.setAdapter(aTodoAdapter);
         etEditText = findViewById(R.id.etEditText);
+        //displayDatabaseInfo();
+        updateWordList();
 
-        //This method remove an item when item is long pressed
+
+
+        //This method remove an item
         lvItems.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
 
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                todoItems.remove(position);
-                aTodoAdapter.notifyDataSetChanged();
-                writeItems();
+                mDbHelper.deleteItem(id);
+                updateWordList();
                 return true;
             }
         });
 
+        //call Edit Activity
         lvItems.setOnItemClickListener(new AdapterView.OnItemClickListener(){
-
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent i = new Intent(getApplicationContext(),EditItemActivity.class);
                 // put "extras" into the bundle for access in the second activity
-                i.putExtra("textBody", todoItems.get(position));
+                i.putExtra("textBody", getItemTodo(id));
                 i.putExtra("code", 123);
-                i.putExtra("position", position);
+                i.putExtra("id", id);
                 startActivityForResult(i, REQUEST_CODE);
             }
         });
 
+        Button btnOnAdd = (Button)findViewById(R.id.btnAddItem);
+        btnOnAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                saveRecord();
+            }
+        });
+
     }
+
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -73,61 +86,53 @@ public class MainActivity extends AppCompatActivity {
             // Extract name value from result extras
             String textBody = data.getExtras().getString("textBody");
             //int code = data.getExtras().getInt("code", 0);
-            int position = data.getExtras().getInt("position");
-            todoItems.set(position, textBody);
-            aTodoAdapter.notifyDataSetChanged();
-            writeItems();
-        }
-    }
-
-
-
-
-    //This method populate the view with input data
-    public void populateArrayItems() {
-        Log.i("debug", "populateArrayItem");
-        readItems();
-        aTodoAdapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_list_item_1, todoItems);
-
-
-
-    }
-
-    public void readItems() {
-        Log.i("debug", "readItem");
-        File filesDir = getFilesDir();
-        File file = new File(filesDir, "todo.txt");
-        try{
-            todoItems = new ArrayList<String>(FileUtils.readLines(file));
-        }catch (IOException e){
-            todoItems = new ArrayList<String>();
-
-        }
-
-
-    }
-
-    public void writeItems() {
-        Log.i("debug", "writeItem");
-        File filesDir = getFilesDir();
-        File file = new File(filesDir, "todo.txt");
-        try{
-            FileUtils.writeLines(file, todoItems);
-        }catch (IOException e){
-            e.printStackTrace();
-        }
-
-
-    }
-
-    //This method add item to the Adapter
-    public void onAddItem(View view) {
-        Log.i("debug", "onAddItem");
-        if (!etEditText.getText().toString().equals("")) { //If field is empty reject adding
-            aTodoAdapter.add(etEditText.getText().toString());
+            long id = data.getExtras().getLong("id");
+            mDbHelper.updateItem(id, textBody);
             etEditText.setText("");
-            writeItems();
-        }else Toast.makeText(this, "Text field is empty ", Toast.LENGTH_SHORT).show();
+            updateWordList();
+
+
+        }
     }
+
+
+    private void saveRecord() {
+        if (!etEditText.getText().toString().equals("")) { //If field is empty reject adding
+            mDbHelper.onAddItem(etEditText.getText().toString());
+            etEditText.setText("");
+            updateWordList();
+        }else Toast.makeText(this, "Text field is empty ", Toast.LENGTH_SHORT).show();
+
+    }
+
+    private void updateWordList() {
+        SimpleCursorAdapter simpleCursorAdapter = new
+                SimpleCursorAdapter(
+                this,
+                android.R.layout.simple_list_item_1,
+                mDbHelper.getWordList(),
+                new String[]{"item"},
+                new int[]{android.R.id.text1},
+                0);
+        lvItems.setAdapter(simpleCursorAdapter);
+    }
+
+    public String getItemTodo(long id) {
+        String returnVal = "";
+        SQLiteDatabase db = mDbHelper.getReadableDatabase();
+        Cursor cursor = db.rawQuery(
+                "SELECT "
+                        + TodoEntry.COLUMN_TODO_ITEM
+                        + " FROM " + TodoEntry.TABLE_NAME
+                        + " WHERE _id = ?", new String[]{String.valueOf(id)});
+        if (cursor.getCount() == 1) {
+            cursor.moveToFirst();
+            returnVal = cursor.getString(0);
+
+        }
+        cursor.close();
+        return returnVal;
+    }
+
+
 }

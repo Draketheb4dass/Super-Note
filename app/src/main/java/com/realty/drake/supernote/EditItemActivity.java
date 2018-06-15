@@ -10,6 +10,7 @@ import android.widget.Toast;
 public class EditItemActivity extends AppCompatActivity {
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -23,16 +24,17 @@ public class EditItemActivity extends AppCompatActivity {
 
     }
 
+    //Called when user click the button and return edited data to MainActivity
     public void onSubmit(View v) {
         EditText etBody = (EditText) findViewById(R.id.editText);
-        int position = getIntent().getIntExtra("position", 0);
+        long id = getIntent().getLongExtra("id", 0);
 
         if (!etBody.getText().toString().equals("")) { //If field is empty reject adding
             Intent data = new Intent();
             // Pass relevant data back as a result
             data.putExtra("textBody", etBody.getText().toString());
             data.putExtra("code", 123);
-            data.putExtra("position", position);
+            data.putExtra("id", id);
             // Activity finished ok, return the data
             setResult(RESULT_OK, data);
             finish();
