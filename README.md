@@ -25,9 +25,11 @@ The following **optional** features are implemented:
 * [ ] Add support for selecting the priority of each todo item (and display in listview item)
 * [x] Tweak the style improving the UI / UX, play with colors, images or backgrounds
 
+
 The following **additional** features are implemented:
 
 * [ ] List anything else that you can get done to improve the app functionality!
+* [x] Add a Splash screen
 
 ## Video Walkthrough
 
