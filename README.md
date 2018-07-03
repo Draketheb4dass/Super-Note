@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/Draketheb4dass/Super-Note.svg?branch=master)](https://travis-ci.org/Draketheb4dass/Super-Note)
+
 # Pre-work - *Super-Note*
 
 **Super-Note** is an android app that allows building a todo list and basic todo items management functionality including adding new items, editing and deleting an existing item.
