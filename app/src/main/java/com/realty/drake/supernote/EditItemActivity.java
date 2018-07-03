@@ -21,8 +21,7 @@ public class EditItemActivity extends AppCompatActivity {
         EditText etBody = (EditText) findViewById(R.id.editText);
         etBody.setText(textBody);
         etBody.setSelection(etBody.getText().length());
-
-    }
+        }
 
     //Called when user click the button and return edited data to MainActivity
     public void onSubmit(View v) {
