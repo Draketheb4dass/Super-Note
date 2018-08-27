@@ -20,15 +20,12 @@ public class MainActivity extends AppCompatActivity {
     //TODO (Suggested) Improve style of the todo items in the list using a custom adapter
     //TODO (Suggested) Add support for completion due dates for todo items (and display within listview item)
     //TODO (Suggested) Use a DialogFragment instead of new Activity for editing items
-    //TODO (Suggested) Improve the UI / UX of your app including icons, styling, color, spacing of your app.
     //TODO Add support for selecting the priority of each todo item (and display in listview item)
     //TODO Anything else that you can get done to improve the app functionality or user experience!
-
 
     ListView lvItems;
     EditText etEditText;
     private final int REQUEST_CODE =123;
-
     private TodoDbHelper mDbHelper;
 
     @Override
@@ -41,13 +38,12 @@ public class MainActivity extends AppCompatActivity {
         //displayDatabaseInfo();
         updateWordList();
 
-
-
-        //This method remove an item
-        lvItems.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-
+        //This method remove an item when long clicked
+        lvItems
+                .setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+            public boolean onItemLongClick(AdapterView<?> parent,
+                                           View view, int position, long id) {
                 mDbHelper.deleteItem(id);
                 updateWordList();
                 return true;
@@ -67,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        Button btnOnAdd = (Button)findViewById(R.id.btnAddItem);
+        Button btnOnAdd = findViewById(R.id.btnAddItem);
         btnOnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -77,32 +73,28 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         // REQUEST_CODE is defined above
         if (resultCode == RESULT_OK && requestCode == REQUEST_CODE) {
             // Extract name value from result extras
             String textBody = data.getExtras().getString("textBody");
-            //int code = data.getExtras().getInt("code", 0);
             long id = data.getExtras().getLong("id");
             mDbHelper.updateItem(id, textBody);
             etEditText.setText("");
             updateWordList();
-
-
         }
     }
 
 
     private void saveRecord() {
-        if (!etEditText.getText().toString().equals("")) { //If field is empty reject adding
+        if (!etEditText.getText()
+                .toString().equals("")) { //If field is empty reject adding
             mDbHelper.onAddItem(etEditText.getText().toString());
             etEditText.setText("");
             updateWordList();
-        }else Toast.makeText(this, "Text field is empty ", Toast.LENGTH_SHORT).show();
-
+        }else Toast.makeText(this,
+                "Text field is empty ", Toast.LENGTH_SHORT).show();
     }
 
     private void updateWordList() {

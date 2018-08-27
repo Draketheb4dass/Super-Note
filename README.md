@@ -37,6 +37,7 @@ Here's a walkthrough of implemented user stories:
 
 <img src='https://imgur.com/DEtUwDx.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
 
+
 GIF created with [ffmpeg](https://www.ffmpeg.org).
 
 ## Project Analysis
