@@ -12,7 +12,7 @@ public class TodoDbHelper extends SQLiteOpenHelper {
     public static final int DATABASE_VERSION =1;
     public static final String DATABASE_NAME = "todo.db";
 
-    TodoDbHelper(Context context){
+    public TodoDbHelper(Context context){
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
@@ -22,13 +22,10 @@ public class TodoDbHelper extends SQLiteOpenHelper {
                 + TodoEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + TodoEntry.COLUMN_TODO_ITEM + " TEXT NOT NULL);";
         db.execSQL(SQL_CREATE_TODO_TABLE);
-
     }
 
     @Override
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
-    }
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {}
 
     //This method is called when adding an item to the database
     public long onAddItem(String item){
@@ -36,8 +33,6 @@ public class TodoDbHelper extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(TodoEntry.COLUMN_TODO_ITEM, item);
        return db.insert(TodoEntry.TABLE_NAME, null, values);
-
-
     }
 
     //This method is called when updating an item

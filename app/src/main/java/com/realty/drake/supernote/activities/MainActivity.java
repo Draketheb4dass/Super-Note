@@ -1,4 +1,4 @@
-package com.realty.drake.supernote;
+package com.realty.drake.supernote.activities;
 
 import android.content.Intent;
 import android.database.Cursor;
@@ -13,7 +13,10 @@ import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Toast;
 
+import com.realty.drake.supernote.R;
 import com.realty.drake.supernote.TodoContract.TodoEntry;
+import com.realty.drake.supernote.TodoDbHelper;
+import com.realty.drake.supernote.activities.EditItemActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -40,36 +43,24 @@ public class MainActivity extends AppCompatActivity {
 
         //This method remove an item when long clicked
         lvItems
-                .setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent,
-                                           View view, int position, long id) {
-                mDbHelper.deleteItem(id);
-                updateWordList();
-                return true;
-            }
-        });
+                .setOnItemLongClickListener((parent, view, position, id) -> {
+                    mDbHelper.deleteItem(id);
+                    updateWordList();
+                    return true;
+                });
 
         //call Edit Activity
-        lvItems.setOnItemClickListener(new AdapterView.OnItemClickListener(){
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent i = new Intent(getApplicationContext(),EditItemActivity.class);
-                // put "extras" into the bundle for access in the second activity
-                i.putExtra("textBody", getItemTodo(id));
-                i.putExtra("code", 123);
-                i.putExtra("id", id);
-                startActivityForResult(i, REQUEST_CODE);
-            }
+        lvItems.setOnItemClickListener((parent, view, position, id) -> {
+            Intent i = new Intent(getApplicationContext(),EditItemActivity.class);
+            // put "extras" into the bundle for access in the second activity
+            i.putExtra("textBody", getItemTodo(id));
+            i.putExtra("code", 123);
+            i.putExtra("id", id);
+            startActivityForResult(i, REQUEST_CODE);
         });
 
         Button btnOnAdd = findViewById(R.id.btnAddItem);
-        btnOnAdd.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                saveRecord();
-            }
-        });
+        btnOnAdd.setOnClickListener(v -> saveRecord());
 
     }
 

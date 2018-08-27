@@ -1,4 +1,4 @@
-package com.realty.drake.supernote;
+package com.realty.drake.supernote.activities;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -7,10 +7,9 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.realty.drake.supernote.R;
+
 public class EditItemActivity extends AppCompatActivity {
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -18,14 +17,14 @@ public class EditItemActivity extends AppCompatActivity {
 
         String textBody = getIntent().getStringExtra("textBody");
         //int code = getIntent().getIntExtra("code", 0);
-        EditText etBody = (EditText) findViewById(R.id.editText);
+        EditText etBody = findViewById(R.id.editText);
         etBody.setText(textBody);
         etBody.setSelection(etBody.getText().length());
-        }
+    }
 
     //Called when user click the button and return edited data to MainActivity
     public void onSubmit(View v) {
-        EditText etBody = (EditText) findViewById(R.id.editText);
+        EditText etBody = findViewById(R.id.editText);
         long id = getIntent().getLongExtra("id", 0);
 
         if (!etBody.getText().toString().equals("")) { //If field is empty reject adding
@@ -37,6 +36,7 @@ public class EditItemActivity extends AppCompatActivity {
             // Activity finished ok, return the data
             setResult(RESULT_OK, data);
             finish();
-        } else Toast.makeText(this, "Text field is empty ", Toast.LENGTH_SHORT).show();
+        } else Toast.makeText(this,
+                "Text field is empty ", Toast.LENGTH_SHORT).show();
     }
 }

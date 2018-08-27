@@ -13,7 +13,5 @@ public final class TodoContract {
         public static final String _ID = BaseColumns._ID;
         public static final String TABLE_NAME = "todo";
         public static final String COLUMN_TODO_ITEM = "item";
-
-
     }
 }
