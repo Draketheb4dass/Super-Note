@@ -36,18 +36,18 @@ public class TodoDbHelper extends SQLiteOpenHelper {
     }
 
     //This method is called when updating an item
-    public int updateItem(long id, String item) {
+    public void updateItem(long id, String item) {
         SQLiteDatabase db = getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(TodoEntry._ID, id);
         values.put(TodoEntry.COLUMN_TODO_ITEM, item);
-        return db.update(TodoEntry.TABLE_NAME, values, "_id = ?",
+        db.update(TodoEntry.TABLE_NAME, values, "_id = ?",
                 new String[]{String.valueOf(id)});
     }
 
-    public int deleteItem(long id) {
+    public void deleteItem(long id) {
         SQLiteDatabase db = getWritableDatabase();
-        return db.delete(TodoEntry.TABLE_NAME, "_id = ?", new
+        db.delete(TodoEntry.TABLE_NAME, "_id = ?", new
                 String[]{String.valueOf(id)});
     }
 

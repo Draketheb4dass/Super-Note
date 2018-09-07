@@ -42,8 +42,7 @@ public class MainActivity extends AppCompatActivity {
         updateWordList();
 
         //This method remove an item when long clicked
-        lvItems
-                .setOnItemLongClickListener((parent, view, position, id) -> {
+        lvItems.setOnItemLongClickListener((parent, view, position, id) -> {
                     mDbHelper.deleteItem(id);
                     updateWordList();
                     return true;
