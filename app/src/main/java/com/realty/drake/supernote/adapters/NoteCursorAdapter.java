@@ -21,7 +21,6 @@ public class NoteCursorAdapter extends CursorAdapter {
     public NoteCursorAdapter(Context context, Cursor cursor) {
         super(context, cursor, 0);
     }
-
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup parent) {
         return LayoutInflater

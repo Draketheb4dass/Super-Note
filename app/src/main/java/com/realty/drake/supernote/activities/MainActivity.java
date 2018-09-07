@@ -3,6 +3,7 @@ package com.realty.drake.supernote.activities;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -48,9 +49,9 @@ public class MainActivity extends AppCompatActivity {
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
         // Query for items from the database and get a cursor back
         Cursor noteCursor = db.rawQuery("SELECT  * FROM todo", null);
+        lvItems = findViewById(R.id.lvItems);
         // Create the adapter to convert the array to views
         NoteCursorAdapter adapter = new NoteCursorAdapter(this, noteCursor);
-        lvItems = findViewById(R.id.lvItems);
         // Attach the adapter to a ListView
         lvItems.setAdapter(adapter);
 
@@ -70,8 +71,15 @@ public class MainActivity extends AppCompatActivity {
             startActivityForResult(i, REQUEST_CODE);
         });
 
-        //Button btnOnAdd = findViewById(R.id.btnAddItem);
-        //btnOnAdd.setOnClickListener(v -> saveRecord());
+        FloatingActionButton fab = findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MainActivity.this.saveRecord();
+                adapter.changeCursor(noteCursor);
+                mDbHelper.getWordList();
+            }
+        });
 
     }
 
@@ -89,15 +97,15 @@ public class MainActivity extends AppCompatActivity {
    // }
 
 
-   // private void saveRecord() {
-   //     if (!etEditText.getText()
-   //             .toString().equals("")) { //If field is empty reject adding
-   //         mDbHelper.onAddItem(etEditText.getText().toString());
-   //         etEditText.setText("");
-   //         updateWordList();
-   //     }else Toast.makeText(this,
-   //             "Text field is empty ", Toast.LENGTH_SHORT).show();
-   // }
+    private void saveRecord() {
+        mDbHelper.onAddItem("Test", "Passed");
+        //if (!etEditText.getText()
+        //        .toString().equals("")) { //If field is empty reject adding
+        //    mDbHelper.onAddItem(etEditText.getText().toString(), "");
+        //    etEditText.setText("");
+        //}else Toast.makeText(this,
+        //        "Text field is empty ", Toast.LENGTH_SHORT).show();
+    }
 
     private void updateWordList() {
         SimpleCursorAdapter simpleCursorAdapter = new
