@@ -10,15 +10,18 @@
         android:id="@+id/tvNoteTitle"
         android:textStyle="bold"
         android:text="Title"
-        android:layout_marginLeft="15dp"
+        android:layout_marginLeft="5dp"
         android:textColor="@color/TextPrimary"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp" />
 
     <TextView
         android:id="@+id/tvNoteBody"
         android:text="Text Body"
+        android:layout_marginLeft="5dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp" />
 
 </LinearLayout>

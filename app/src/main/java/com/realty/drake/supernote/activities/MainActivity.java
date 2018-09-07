@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         mDbHelper = new TodoDbHelper(this);
         lvItems = findViewById(R.id.lvItems);
-        etEditText = findViewById(R.id.etEditText);
+        //etEditText = findViewById(R.id.etEditText);
         ArrayList<Note> arrayOfNotes = new ArrayList<>();
         // Create the adapter to convert the array to views
         NoteAdapter adapter = new NoteAdapter(this, arrayOfNotes);
@@ -71,8 +71,8 @@ public class MainActivity extends AppCompatActivity {
             startActivityForResult(i, REQUEST_CODE);
         });
 
-        Button btnOnAdd = findViewById(R.id.btnAddItem);
-        btnOnAdd.setOnClickListener(v -> saveRecord());
+        //Button btnOnAdd = findViewById(R.id.btnAddItem);
+        //btnOnAdd.setOnClickListener(v -> saveRecord());
 
     }
 
