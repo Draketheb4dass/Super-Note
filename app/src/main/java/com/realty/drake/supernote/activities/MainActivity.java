@@ -13,10 +13,14 @@ import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Toast;
 
+import com.realty.drake.supernote.Note;
 import com.realty.drake.supernote.R;
 import com.realty.drake.supernote.TodoContract.TodoEntry;
 import com.realty.drake.supernote.TodoDbHelper;
 import com.realty.drake.supernote.activities.EditItemActivity;
+import com.realty.drake.supernote.adapters.NoteAdapter;
+
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -38,8 +42,17 @@ public class MainActivity extends AppCompatActivity {
         mDbHelper = new TodoDbHelper(this);
         lvItems = findViewById(R.id.lvItems);
         etEditText = findViewById(R.id.etEditText);
+        ArrayList<Note> arrayOfNotes = new ArrayList<>();
+        // Create the adapter to convert the array to views
+        NoteAdapter adapter = new NoteAdapter(this, arrayOfNotes);
+        // Attach the adapter to a ListView
+        lvItems.setAdapter(adapter);
         //displayDatabaseInfo();
-        updateWordList();
+        //updateWordList();
+        Note newNote = new Note("Nathan", "San Diego");
+        Note newNote2 = new Note("Nathan", "San Diego");
+        adapter.add(newNote);
+        adapter.add(newNote2);
 
         //This method remove an item when long clicked
         lvItems.setOnItemLongClickListener((parent, view, position, id) -> {
