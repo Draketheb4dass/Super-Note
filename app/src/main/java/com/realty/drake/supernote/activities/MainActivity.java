@@ -18,7 +18,7 @@ import com.realty.drake.supernote.R;
 import com.realty.drake.supernote.TodoContract.TodoEntry;
 import com.realty.drake.supernote.TodoDbHelper;
 import com.realty.drake.supernote.activities.EditItemActivity;
-import com.realty.drake.supernote.adapters.NoteAdapter;
+import com.realty.drake.supernote.adapters.NoteCursorAdapter;
 
 import java.util.ArrayList;
 
@@ -40,19 +40,19 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mDbHelper = new TodoDbHelper(this);
-        lvItems = findViewById(R.id.lvItems);
         //etEditText = findViewById(R.id.etEditText);
-        ArrayList<Note> arrayOfNotes = new ArrayList<>();
+
+        //updateWordList();
+
+        // Get access to the underlying writeable database
+        SQLiteDatabase db = mDbHelper.getWritableDatabase();
+        // Query for items from the database and get a cursor back
+        Cursor noteCursor = db.rawQuery("SELECT  * FROM todo", null);
         // Create the adapter to convert the array to views
-        NoteAdapter adapter = new NoteAdapter(this, arrayOfNotes);
+        NoteCursorAdapter adapter = new NoteCursorAdapter(this, noteCursor);
+        lvItems = findViewById(R.id.lvItems);
         // Attach the adapter to a ListView
         lvItems.setAdapter(adapter);
-        //displayDatabaseInfo();
-        //updateWordList();
-        Note newNote = new Note("Nathan", "San Diego");
-        Note newNote2 = new Note("Nathan", "San Diego");
-        adapter.add(newNote);
-        adapter.add(newNote2);
 
         //This method remove an item when long clicked
         lvItems.setOnItemLongClickListener((parent, view, position, id) -> {
@@ -75,29 +75,29 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        // REQUEST_CODE is defined above
-        if (resultCode == RESULT_OK && requestCode == REQUEST_CODE) {
-            // Extract name value from result extras
-            String textBody = data.getExtras().getString("textBody");
-            long id = data.getExtras().getLong("id");
-            mDbHelper.updateItem(id, textBody);
-            etEditText.setText("");
-            updateWordList();
-        }
-    }
+   // @Override
+   // protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+   //     // REQUEST_CODE is defined above
+   //     if (resultCode == RESULT_OK && requestCode == REQUEST_CODE) {
+   //         // Extract name value from result extras
+   //         String textBody = data.getExtras().getString("textBody");
+   //         long id = data.getExtras().getLong("id");
+   //         mDbHelper.updateItem(id, textBody);
+   //         etEditText.setText("");
+   //         updateWordList();
+   //     }
+   // }
 
 
-    private void saveRecord() {
-        if (!etEditText.getText()
-                .toString().equals("")) { //If field is empty reject adding
-            mDbHelper.onAddItem(etEditText.getText().toString());
-            etEditText.setText("");
-            updateWordList();
-        }else Toast.makeText(this,
-                "Text field is empty ", Toast.LENGTH_SHORT).show();
-    }
+   // private void saveRecord() {
+   //     if (!etEditText.getText()
+   //             .toString().equals("")) { //If field is empty reject adding
+   //         mDbHelper.onAddItem(etEditText.getText().toString());
+   //         etEditText.setText("");
+   //         updateWordList();
+   //     }else Toast.makeText(this,
+   //             "Text field is empty ", Toast.LENGTH_SHORT).show();
+   // }
 
     private void updateWordList() {
         SimpleCursorAdapter simpleCursorAdapter = new
@@ -116,7 +116,8 @@ public class MainActivity extends AppCompatActivity {
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
         Cursor cursor = db.rawQuery(
                 "SELECT "
-                        + TodoEntry.COLUMN_TODO_ITEM
+                        + TodoEntry.COLUMN_TODO_NOTE_TITLE
+                        + TodoEntry.COLUMN_TODO_NOTE_BODY
                         + " FROM " + TodoEntry.TABLE_NAME
                         + " WHERE _id = ?", new String[]{String.valueOf(id)});
         if (cursor.getCount() == 1) {
