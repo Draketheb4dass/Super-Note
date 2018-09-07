@@ -6,33 +6,23 @@ import android.database.sqlite.SQLiteDatabase;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.SimpleCursorAdapter;
 import android.widget.Toast;
 
-import com.realty.drake.supernote.Note;
 import com.realty.drake.supernote.R;
 import com.realty.drake.supernote.TodoContract.TodoEntry;
 import com.realty.drake.supernote.TodoDbHelper;
-import com.realty.drake.supernote.activities.EditItemActivity;
 import com.realty.drake.supernote.adapters.NoteCursorAdapter;
-
-import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
-    //TODO (Suggested) Improve style of the todo items in the list using a custom adapter
     //TODO (Suggested) Add support for completion due dates for todo items (and display within listview item)
     //TODO (Suggested) Use a DialogFragment instead of new Activity for editing items
     //TODO Add support for selecting the priority of each todo item (and display in listview item)
     //TODO Anything else that you can get done to improve the app functionality or user experience!
 
     ListView lvItems;
-    EditText etEditText;
     private final int REQUEST_CODE =123;
     private TodoDbHelper mDbHelper;
 
@@ -43,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
         mDbHelper = new TodoDbHelper(this);
         //updateWordList();
 
-        // Get access to the underlying writeable database
+        // Get access to the underlying writable database
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
         // Query for items from the database and get a cursor back
         Cursor noteCursor = db.rawQuery("SELECT  * FROM todo", null);
@@ -56,6 +46,9 @@ public class MainActivity extends AppCompatActivity {
         //This method remove an item when long clicked
         lvItems.setOnItemLongClickListener((parent, view, position, id) -> {
                     mDbHelper.deleteItem(id);
+                    Cursor noteCursor2 = db.rawQuery("SELECT  * FROM todo", null);
+                    adapter.changeCursor(noteCursor2);
+            Toast.makeText(this, "Deleted!", Toast.LENGTH_SHORT).show();
                     return true;
                 });
 
@@ -70,13 +63,10 @@ public class MainActivity extends AppCompatActivity {
         });
 
         FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                saveRecord();
-                Cursor noteCursor2 = db.rawQuery("SELECT  * FROM todo", null);
-                adapter.changeCursor(noteCursor2);
-            }
+        fab.setOnClickListener(v -> {
+            saveRecord();
+            Cursor noteCursor2 = db.rawQuery("SELECT  * FROM todo", null);
+            adapter.changeCursor(noteCursor2);
         });
 
     }
@@ -95,27 +85,7 @@ public class MainActivity extends AppCompatActivity {
    // }
 
 
-    private void saveRecord() {
-        mDbHelper.onAddItem("Test", "Passed");
-        //if (!etEditText.getText()
-        //        .toString().equals("")) { //If field is empty reject adding
-        //    mDbHelper.onAddItem(etEditText.getText().toString(), "");
-        //    etEditText.setText("");
-        //}else Toast.makeText(this,
-        //        "Text field is empty ", Toast.LENGTH_SHORT).show();
-    }
-
-    private void updateWordList() {
-        SimpleCursorAdapter simpleCursorAdapter = new
-                SimpleCursorAdapter(
-                this,
-                android.R.layout.simple_list_item_1,
-                mDbHelper.getWordList(),
-                new String[]{"item"},
-                new int[]{android.R.id.text1},
-                0);
-        lvItems.setAdapter(simpleCursorAdapter);
-    }
+    private void saveRecord() { mDbHelper.onAddItem("Test", "Passed");}
 
     public String getItemTodo(long id) {
         String returnVal = "";
