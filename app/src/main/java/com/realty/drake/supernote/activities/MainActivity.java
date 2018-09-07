@@ -123,7 +123,6 @@ public class MainActivity extends AppCompatActivity {
         if (cursor.getCount() == 1) {
             cursor.moveToFirst();
             returnVal = cursor.getString(0);
-
         }
         cursor.close();
         return returnVal;
