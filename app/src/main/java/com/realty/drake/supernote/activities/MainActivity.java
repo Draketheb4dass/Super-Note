@@ -41,8 +41,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mDbHelper = new TodoDbHelper(this);
-        //etEditText = findViewById(R.id.etEditText);
-
         //updateWordList();
 
         // Get access to the underlying writeable database
@@ -75,9 +73,9 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MainActivity.this.saveRecord();
-                adapter.changeCursor(noteCursor);
-                mDbHelper.getWordList();
+                saveRecord();
+                Cursor noteCursor2 = db.rawQuery("SELECT  * FROM todo", null);
+                adapter.changeCursor(noteCursor2);
             }
         });
 
