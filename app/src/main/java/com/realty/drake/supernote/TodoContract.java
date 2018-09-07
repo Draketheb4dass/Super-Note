@@ -12,6 +12,7 @@ public final class TodoContract {
     public static abstract class TodoEntry implements BaseColumns{
         public static final String _ID = BaseColumns._ID;
         public static final String TABLE_NAME = "todo";
-        public static final String COLUMN_TODO_ITEM = "item";
+        public static final String COLUMN_TODO_NOTE_TITLE = "noteTitle";
+        public static final String COLUMN_TODO_NOTE_BODY = "noteBody";
     }
 }

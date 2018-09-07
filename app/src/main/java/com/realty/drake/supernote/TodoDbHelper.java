@@ -20,7 +20,8 @@ public class TodoDbHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         String SQL_CREATE_TODO_TABLE = "CREATE TABLE " + TodoEntry.TABLE_NAME + "("
                 + TodoEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-                + TodoEntry.COLUMN_TODO_ITEM + " TEXT NOT NULL);";
+                + TodoEntry.COLUMN_TODO_NOTE_TITLE + " TEXT NOT NULL, "
+                + TodoEntry.COLUMN_TODO_NOTE_BODY + "TEXT NOT NULL);";
         db.execSQL(SQL_CREATE_TODO_TABLE);
     }
 
@@ -28,19 +29,21 @@ public class TodoDbHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {}
 
     //This method is called when adding an item to the database
-    public long onAddItem(String item){
+    public long onAddItem(String noteTitle, String noteBody){
         SQLiteDatabase db = getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put(TodoEntry.COLUMN_TODO_ITEM, item);
+        values.put(TodoEntry.COLUMN_TODO_NOTE_TITLE, noteTitle);
+        values.put(TodoEntry.COLUMN_TODO_NOTE_BODY, noteBody);
        return db.insert(TodoEntry.TABLE_NAME, null, values);
     }
 
     //This method is called when updating an item
-    public void updateItem(long id, String item) {
+    public void updateItem(long id, String noteTitle, String noteBody) {
         SQLiteDatabase db = getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(TodoEntry._ID, id);
-        values.put(TodoEntry.COLUMN_TODO_ITEM, item);
+        values.put(TodoEntry.COLUMN_TODO_NOTE_TITLE, noteTitle);
+        values.put(TodoEntry.COLUMN_TODO_NOTE_BODY, noteBody);
         db.update(TodoEntry.TABLE_NAME, values, "_id = ?",
                 new String[]{String.valueOf(id)});
     }
@@ -54,8 +57,9 @@ public class TodoDbHelper extends SQLiteOpenHelper {
     //Read all the data from the table and put it in a cursor
     public Cursor getWordList() {
         SQLiteDatabase db = getReadableDatabase();
-        String query = "SELECT " + TodoEntry._ID + ", "  + TodoEntry.COLUMN_TODO_ITEM +
-                " FROM " + TodoEntry.TABLE_NAME + " ORDER BY " + TodoEntry._ID +
+        String query = "SELECT " + TodoEntry._ID + ", "  + TodoEntry.COLUMN_TODO_NOTE_TITLE +
+                 TodoEntry.COLUMN_TODO_NOTE_BODY
+                + " FROM " + TodoEntry.TABLE_NAME + " ORDER BY " + TodoEntry._ID +
                 " ASC";
         return db.rawQuery(query, null);
     }
